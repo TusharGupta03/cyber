@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -8,7 +8,7 @@ const App = () => {
   const [logs, setLogs] = useState([]);
   const [blockedIPs, setBlockedIPs] = useState([]);
   const [serverStatus, setServerStatus] = useState('Primary');
-  const [attackInProgress, setAttackInProgress] = useState(false);
+  const attackInProgress= useRef(false);
 
   useEffect(() => {
     // Fetch initial data
@@ -31,14 +31,23 @@ const App = () => {
   }, []);
 
   const startDosAttack = async () => {
-    setAttackInProgress(true);
+    attackInProgress.current =true;
     // Simulate the attack by sending requests in a loop to a target endpoint
+    const headers = {
+      'ngrok-skip-browser-warning': 'true',
+    }
+    
     const simulateAttack = async () => {
-      while (attackInProgress) {
+      console.log("attack start")
+      let i =0 ;
+      
+      while (i<100) {
         try {
-          await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/target');
+          await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/resource', { headers });
+          i++;
         } catch (error) {
           console.error('Error during attack simulation', error);
+          i++;
         }
       }
     };
@@ -46,7 +55,7 @@ const App = () => {
   };
 
   const stopDosAttack = () => {
-    setAttackInProgress(false);
+    attackInProgress.current = false;
   };
 
   return (
@@ -81,14 +90,14 @@ const App = () => {
         <button
           onClick={startDosAttack}
           style={styles.dosButton}
-          disabled={attackInProgress}
+          disabled={attackInProgress.current}
         >
           Start DoS Attack
         </button>
         <button
           onClick={stopDosAttack}
           style={styles.dosButton}
-          disabled={!attackInProgress}
+          disabled={!attackInProgress.current}
         >
           Stop DoS Attack
         </button>
