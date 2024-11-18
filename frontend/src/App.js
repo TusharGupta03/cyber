@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://6617-110-224-168-92.ngrok-free.app');
+const socket = io('https://1379-110-224-168-92.ngrok-free.app');
 
 const App = () => {
   const [logs, setLogs] = useState([]);
@@ -12,9 +12,12 @@ const App = () => {
 
   useEffect(() => {
     // Fetch initial data
+    const headers = {
+      'ngrok-skip-browser-warning': 'true',
+    }
     const fetchData = async () => {
-      const logRes = await axios.get('https://6617-110-224-168-92.ngrok-free.app/api/logs');
-      const ipRes = await axios.get('https://6617-110-224-168-92.ngrok-free.app/api/blocked-ips');
+      const logRes = await axios.get('https://1379-110-224-168-92.ngrok-free.app/api/logs', { headers });
+      const ipRes = await axios.get('https://1379-110-224-168-92.ngrok-free.app/api/blocked-ips', { headers });
       setLogs(logRes.data);
       setBlockedIPs(ipRes.data);
     };

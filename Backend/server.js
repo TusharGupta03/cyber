@@ -23,8 +23,10 @@ let useSecondary = false;
 
 // Middleware
 const corsOptions = {
-  origin: 'https://cyberfrontend.netlify.app', // Allow requests only from this domain
+  origin: ['https://cyberfrontend.netlify.app', 'http://localhost:3000'], // Allow requests from both production and localhost
 };
+
+
 
 // Use the CORS middleware with the configured options
 // app.enable('trust proxy')
