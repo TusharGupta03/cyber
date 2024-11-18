@@ -22,10 +22,17 @@ const SECONDARY_SERVER = 'http://localhost:5001';
 let useSecondary = false;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'https://cyberfrontend.netlify.app', // Allow requests only from this domain
+  methods: ['GET', 'POST'], // Optional: specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Optional: specify allowed headers
+};
+
+// Use the CORS middleware with the configured options
+// app.enable('trust proxy')
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(require('morgan')('dev'));
-
 // Rate Limiter
 const blockedIPs = new Set();
 const limiter = rateLimit({

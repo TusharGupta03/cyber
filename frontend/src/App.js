@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+const socket = io('https://cyberbackend-47lp.onrender.com');
 
 const App = () => {
   const [logs, setLogs] = useState([]);
@@ -13,8 +13,8 @@ const App = () => {
   useEffect(() => {
     // Fetch initial data
     const fetchData = async () => {
-      const logRes = await axios.get('http://localhost:5000/api/logs');
-      const ipRes = await axios.get('http://localhost:5000/api/blocked-ips');
+      const logRes = await axios.get('https://cyberbackend-47lp.onrender.com/api/logs');
+      const ipRes = await axios.get('https://cyberbackend-47lp.onrender.com/api/blocked-ips');
       setLogs(logRes.data);
       setBlockedIPs(ipRes.data);
     };
