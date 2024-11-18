@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://cyberbackend-47lp.onrender.com');
+const socket = io('https://6617-110-224-168-92.ngrok-free.app');
 
 const App = () => {
   const [logs, setLogs] = useState([]);
@@ -13,8 +13,8 @@ const App = () => {
   useEffect(() => {
     // Fetch initial data
     const fetchData = async () => {
-      const logRes = await axios.get('https://cyberbackend-47lp.onrender.com/api/logs');
-      const ipRes = await axios.get('https://cyberbackend-47lp.onrender.com/api/blocked-ips');
+      const logRes = await axios.get('https://6617-110-224-168-92.ngrok-free.app/api/logs');
+      const ipRes = await axios.get('https://6617-110-224-168-92.ngrok-free.app/api/blocked-ips');
       setLogs(logRes.data);
       setBlockedIPs(ipRes.data);
     };
