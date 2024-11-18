@@ -1,14 +1,14 @@
-// src/App.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://1379-110-224-168-92.ngrok-free.app');
+const socket = io('https://16d1-110-224-167-243.ngrok-free.app');
 
 const App = () => {
   const [logs, setLogs] = useState([]);
   const [blockedIPs, setBlockedIPs] = useState([]);
   const [serverStatus, setServerStatus] = useState('Primary');
+  const [attackInProgress, setAttackInProgress] = useState(false);
 
   useEffect(() => {
     // Fetch initial data
@@ -16,8 +16,8 @@ const App = () => {
       'ngrok-skip-browser-warning': 'true',
     }
     const fetchData = async () => {
-      const logRes = await axios.get('https://1379-110-224-168-92.ngrok-free.app/api/logs', { headers });
-      const ipRes = await axios.get('https://1379-110-224-168-92.ngrok-free.app/api/blocked-ips', { headers });
+      const logRes = await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/logs', { headers });
+      const ipRes = await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/blocked-ips', { headers });
       setLogs(logRes.data);
       setBlockedIPs(ipRes.data);
     };
@@ -29,6 +29,25 @@ const App = () => {
     });
     socket.on('server-switch', (server) => setServerStatus(server));
   }, []);
+
+  const startDosAttack = async () => {
+    setAttackInProgress(true);
+    // Simulate the attack by sending requests in a loop to a target endpoint
+    const simulateAttack = async () => {
+      while (attackInProgress) {
+        try {
+          await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/target');
+        } catch (error) {
+          console.error('Error during attack simulation', error);
+        }
+      }
+    };
+    simulateAttack();
+  };
+
+  const stopDosAttack = () => {
+    setAttackInProgress(false);
+  };
 
   return (
     <div style={styles.container}>
@@ -58,6 +77,22 @@ const App = () => {
           </ul>
         </section>
       </main>
+      <div style={styles.dosButtonContainer}>
+        <button
+          onClick={startDosAttack}
+          style={styles.dosButton}
+          disabled={attackInProgress}
+        >
+          Start DoS Attack
+        </button>
+        <button
+          onClick={stopDosAttack}
+          style={styles.dosButton}
+          disabled={!attackInProgress}
+        >
+          Stop DoS Attack
+        </button>
+      </div>
     </div>
   );
 };
@@ -126,6 +161,20 @@ const styles = {
     borderRadius: '5px',
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  dosButtonContainer: {
+    marginTop: '20px',
+    textAlign: 'center',
+  },
+  dosButton: {
+    padding: '10px 20px',
+    fontSize: '1rem',
+    backgroundColor: '#ff5722',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    margin: '10px',
   },
 };
 
