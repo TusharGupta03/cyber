@@ -24,8 +24,6 @@ let useSecondary = false;
 // Middleware
 const corsOptions = {
   origin: 'https://cyberfrontend.netlify.app', // Allow requests only from this domain
-  methods: ['GET', 'POST'], // Optional: specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Optional: specify allowed headers
 };
 
 // Use the CORS middleware with the configured options
