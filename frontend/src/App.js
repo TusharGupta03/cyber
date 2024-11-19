@@ -94,7 +94,7 @@ const App = () => {
         </button>
         <button
           onClick={stopDosAttack}
-          style={styles.dosButton}
+          style={styles.dosButton2}
           disabled={!attackInProgress.current}
         >
           Stop DoS Attack
@@ -183,6 +183,19 @@ const styles = {
     flexWrap: 'wrap',  // Ensure buttons are responsive on smaller screens
   },
   dosButton: {
+    padding: '12px 24px',
+    fontSize: '1.2rem',
+    backgroundColor: '#ff5722',
+    color: '#fff',
+    display: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#ff784e',  // Change color on hover for better interaction
+    },
+  },
+  dosButton2: {
     padding: '12px 24px',
     fontSize: '1.2rem',
     backgroundColor: '#ff5722',
