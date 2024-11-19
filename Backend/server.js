@@ -21,44 +21,54 @@ const PRIMARY_SERVER = 'http://localhost:5000';
 const SECONDARY_SERVER = 'http://localhost:5001';
 let useSecondary = false;
 
-// Middleware
 const corsOptions = {
-  origin: ['https://cyberfrontend.netlify.app', 'http://localhost:3000'], // Allow requests from both production and localhost
+  origin: ['https://cyberfrontend.netlify.app', 'http://localhost:3000'], 
 };
 
 
 
-// Use the CORS middleware with the configured options
-// app.enable('trust proxy')
+app.set('trust proxy', false); 
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(require('morgan')('dev'));
 // Rate Limiter
 const blockedIPs = new Set();
+let serverDown = false 
 const limiter = rateLimit({
   windowMs: 10 * 1000, // 10 seconds
-  max: 50, // Max 50 requests per IP
+  max: 10, // Max 50 requests per IP
   handler: async (req, res) => {
-    const ip = req.ip;
-    if (!blockedIPs.has(ip)) {
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    if (ip.includes(',')) {
+      ip = ip.split(',')[0].trim();
+    }
+    console.log("limiter ip ", ip)
+
+
+    if (!blockedIPs.has(ip) && ip!="::1") {
+      serverDown= true;
       blockedIPs.add(ip);
       await BlockedIP.create({ ip });
+      io.emit('server-switch', serverDown ? 'Secondary' : 'Primary');
       io.emit('blocked-ip', ip);
     }
     res.status(429).json({ message: 'Too many requests. You are blocked!' });
   },
 });
 
-// Database Connection
 mongoose.connect('mongodb://127.0.0.1:27017/cybersecurity', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected')).catch(err => console.error(err));
 
-// Middleware for logging and spoofing detection
 app.use(spoofingDetectionMiddleware);
 app.use(async (req, res, next) => {
-  const ip = req.ip;
+  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  if (ip.includes(',')) {
+    ip = ip.split(',')[0].trim();
+  }
+  console.log("middle ip ", ip)
   if (blockedIPs.has(ip)) {
     return res.status(403).json({ message: 'Access denied. IP is blocked.' });
   }
@@ -75,11 +85,11 @@ app.use(async (req, res, next) => {
 const handleRequest = async (req, res) => {
   const server = useSecondary ? SECONDARY_SERVER : PRIMARY_SERVER;
   try {
-    const response = await axios.get(`${server}/api/resource`);
-    res.json(response.data);
+    res.json({ a: "response.data" });
   } catch (error) {
+    console.log(blockedIPs)
+    console.log(error)
     console.warn(`${server} is down. Switching to ${useSecondary ? 'Primary' : 'Secondary'} server.`);
-    useSecondary = !useSecondary;
     io.emit('server-switch', useSecondary ? 'Secondary' : 'Primary');
     res.status(503).json({ message: 'Failover in progress. Please retry.' });
   }

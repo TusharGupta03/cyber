@@ -92,13 +92,13 @@ const App = () => {
         >
           Start DoS Attack
         </button>
-        <button
+        {/* <button
           onClick={stopDosAttack}
           style={styles.dosButton}
           disabled={!attackInProgress.current}
         >
           Stop DoS Attack
-        </button>
+        </button> */}
       </div>
     </div>
   );
@@ -107,7 +107,7 @@ const App = () => {
 const styles = {
   container: {
     fontFamily: "'Courier New', Courier, monospace",
-    backgroundColor: '#1a1b2f',  // Darker background for a more professional vibe
+    backgroundColor: '#1a1b2f', 
     color: '#eaeaea',
     minHeight: '100vh',
     padding: '20px',
