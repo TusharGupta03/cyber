@@ -187,7 +187,6 @@ const styles = {
     fontSize: '1.2rem',
     backgroundColor: '#ff5722',
     color: '#fff',
-    display: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
