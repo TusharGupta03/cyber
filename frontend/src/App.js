@@ -40,7 +40,7 @@ const App = () => {
 
     const simulateAttack = async () => {
       console.log("attack start")
-      
+
       while (true) {
         try {
           await axios.get('https://929c-27-59-126-123.ngrok-free.app/api/resource', { headers });
@@ -92,13 +92,13 @@ const App = () => {
         >
           Start DoS Attack
         </button>
-        {/* <button
+        <button
           onClick={stopDosAttack}
           style={styles.dosButton}
           disabled={!attackInProgress.current}
         >
           Stop DoS Attack
-        </button> */}
+        </button>
       </div>
     </div>
   );
@@ -107,7 +107,7 @@ const App = () => {
 const styles = {
   container: {
     fontFamily: "'Courier New', Courier, monospace",
-    backgroundColor: '#1a1b2f', 
+    backgroundColor: '#1a1b2f',
     color: '#eaeaea',
     minHeight: '100vh',
     padding: '20px',
@@ -188,6 +188,7 @@ const styles = {
     backgroundColor: '#ff5722',
     color: '#fff',
     border: 'none',
+    display: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
@@ -195,7 +196,7 @@ const styles = {
       backgroundColor: '#ff784e',  // Change color on hover for better interaction
     },
   },
-  
+
   // Responsive styles
   '@media screen and (max-width: 768px)': {
     container: {
