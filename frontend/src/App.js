@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://929c-27-59-126-123.ngrok-free.app');
+const socket = io('https://929c-27-59-126-123.ngrok-free.app', {
+  extraHeaders: {
+    'ngrok-skip-browser-warning': 'true',
+  },
+});
 
 const App = () => {
   const [logs, setLogs] = useState([]);
