@@ -2,28 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://16d1-110-224-167-243.ngrok-free.app');
+const socket = io('https://929c-27-59-126-123.ngrok-free.app');
 
 const App = () => {
   const [logs, setLogs] = useState([]);
   const [blockedIPs, setBlockedIPs] = useState([]);
   const [serverStatus, setServerStatus] = useState('Primary');
-  const attackInProgress= useRef(false);
+  const attackInProgress = useRef(false);
 
   useEffect(() => {
-    // Fetch initial data
     const headers = {
       'ngrok-skip-browser-warning': 'true',
     }
     const fetchData = async () => {
-      const logRes = await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/logs', { headers });
-      const ipRes = await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/blocked-ips', { headers });
+      const logRes = await axios.get('https://929c-27-59-126-123.ngrok-free.app/api/logs', { headers });
+      const ipRes = await axios.get('https://929c-27-59-126-123.ngrok-free.app/api/blocked-ips', { headers });
       setLogs(logRes.data);
       setBlockedIPs(ipRes.data);
     };
     fetchData();
 
-    // Listen to real-time updates
     socket.on('blocked-ip', (ip) => {
       setBlockedIPs((prev) => [...prev, { ip, createdAt: new Date().toISOString() }]);
     });
@@ -31,23 +29,19 @@ const App = () => {
   }, []);
 
   const startDosAttack = async () => {
-    attackInProgress.current =true;
-    // Simulate the attack by sending requests in a loop to a target endpoint
+    attackInProgress.current = true;
     const headers = {
       'ngrok-skip-browser-warning': 'true',
     }
-    
+
     const simulateAttack = async () => {
       console.log("attack start")
-      let i =0 ;
       
-      while (i<100) {
+      while (true) {
         try {
-          await axios.get('https://16d1-110-224-167-243.ngrok-free.app/api/resource', { headers });
-          i++;
+          await axios.get('https://929c-27-59-126-123.ngrok-free.app/api/resource', { headers });
         } catch (error) {
           console.error('Error during attack simulation', error);
-          i++;
         }
       }
     };
@@ -109,21 +103,22 @@ const App = () => {
 const styles = {
   container: {
     fontFamily: "'Courier New', Courier, monospace",
-    backgroundColor: '#1b1b2f',
+    backgroundColor: '#1a1b2f',  // Darker background for a more professional vibe
     color: '#eaeaea',
     minHeight: '100vh',
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   header: {
     textAlign: 'center',
     marginBottom: '20px',
   },
   title: {
-    fontSize: '2.5rem',
+    fontSize: '3rem',
     color: '#00d4ff',
-    textShadow: '0 0 10px #00d4ff, 0 0 20px #00d4ff',
+    textShadow: '0 0 15px #00d4ff, 0 0 30px #00d4ff',
   },
   subtitle: {
     fontSize: '1.5rem',
@@ -143,18 +138,21 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-around',
     gap: '20px',
+    flexWrap: 'wrap',  // Ensures the layout adjusts on smaller screens
   },
   section: {
     backgroundColor: '#162447',
     borderRadius: '10px',
-    padding: '15px',
+    padding: '20px',
     flex: 1,
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    minWidth: '280px',  // Minimum width for responsiveness
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+    marginBottom: '20px',  // Add margin between sections
   },
   sectionTitle: {
-    fontSize: '1.5rem',
+    fontSize: '1.8rem',
     borderBottom: '2px solid #00d4ff',
-    paddingBottom: '5px',
+    paddingBottom: '8px',
     marginBottom: '10px',
   },
   list: {
@@ -164,26 +162,59 @@ const styles = {
     overflowY: 'auto',
   },
   listItem: {
-    padding: '8px 10px',
-    marginBottom: '5px',
+    padding: '10px 12px',
+    marginBottom: '8px',
     backgroundColor: '#1f4068',
-    borderRadius: '5px',
+    borderRadius: '8px',
     display: 'flex',
     justifyContent: 'space-between',
+    fontSize: '1.1rem',
   },
   dosButtonContainer: {
     marginTop: '20px',
     textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '20px',  // Space buttons evenly
+    flexWrap: 'wrap',  // Ensure buttons are responsive on smaller screens
   },
   dosButton: {
-    padding: '10px 20px',
-    fontSize: '1rem',
+    padding: '12px 24px',
+    fontSize: '1.2rem',
     backgroundColor: '#ff5722',
     color: '#fff',
     border: 'none',
-    borderRadius: '5px',
+    borderRadius: '6px',
     cursor: 'pointer',
-    margin: '10px',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#ff784e',  // Change color on hover for better interaction
+    },
+  },
+  
+  // Responsive styles
+  '@media screen and (max-width: 768px)': {
+    container: {
+      padding: '10px',
+    },
+    title: {
+      fontSize: '2rem',
+    },
+    subtitle: {
+      fontSize: '1.2rem',
+    },
+    main: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    section: {
+      flex: 1,
+      minWidth: '90%',
+      marginBottom: '15px',
+    },
+    dosButtonContainer: {
+      flexDirection: 'column',
+    },
   },
 };
 
